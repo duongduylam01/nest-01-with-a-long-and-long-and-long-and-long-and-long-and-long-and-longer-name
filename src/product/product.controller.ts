@@ -11,10 +11,9 @@ import {
   Query
 } from "@nestjs/common";
 import { ProductService } from "./product.service";
-import { Product } from "../schema/product.schema";
 import { CreateProductDto } from "../dto/create-product.dto";
 import { UpdateProductDto } from "../dto/update-product.dto";
-import { DataStatus, HttpStatus, ResponseMessage } from "../global/global-enum";
+import { HttpStatus, ResponseMessage } from "../global/global-enum";
 import { ApiResponse } from "../global/api-response";
 
 @Controller("api/product")
