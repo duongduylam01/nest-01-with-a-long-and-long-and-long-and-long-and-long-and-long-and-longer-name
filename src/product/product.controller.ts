@@ -41,10 +41,14 @@ export class ProductController {
       product: CreateProductDto
   ) {
     try {
+      const { error, value } = CreateProductDto.schema.validate(product);
+      if (error) {
+        throw new HttpException(ApiResponse.error(error.details[0].message || ResponseMessage.SERVER_INTERNAL_ERROR), HttpStatus.ERROR);
+      }
       const data = await this.productService.create(product);
       return ApiResponse.success(data, ResponseMessage.CREATE_SUCCESS);
     } catch (error) {
-      throw new HttpException(ApiResponse.error(ResponseMessage.SERVER_INTERNAL_ERROR), HttpStatus.ERROR);
+      throw new HttpException(ApiResponse.error(error?.message || ResponseMessage.SERVER_INTERNAL_ERROR), HttpStatus.ERROR);
     }
   }
 
@@ -69,10 +73,14 @@ export class ProductController {
       product: UpdateProductDto
   ) {
     try {
+      const { error, value } = UpdateProductDto.schema.validate(product);
+      if (error) {
+        throw new HttpException(ApiResponse.error(error.details[0].message || ResponseMessage.SERVER_INTERNAL_ERROR), HttpStatus.ERROR);
+      }
       const data = await this.productService.updateById(id, product);
       return ApiResponse.success(data, ResponseMessage.UPDATE_SUCCESS);
     } catch (error) {
-      throw new HttpException(ApiResponse.error(ResponseMessage.SERVER_INTERNAL_ERROR), HttpStatus.ERROR);
+      throw new HttpException(ApiResponse.error(error?.message || ResponseMessage.SERVER_INTERNAL_ERROR), HttpStatus.ERROR);
     }
   }
 
