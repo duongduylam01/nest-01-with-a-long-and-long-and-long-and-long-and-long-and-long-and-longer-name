@@ -18,11 +18,6 @@ export class ProductService {
   }
 
   async findAll(pageNum: number = 1, pageSize: number = 10): Promise<{ data: Product[], total: number }> {
-    // const [data, total] = await Promise.all([
-    //   this.productModel.find(this.acitveCondition()).sort({ createdAt: -1 }).skip((pageNum-1)*pageSize).limit(pageSize),
-    //   this.productModel.countDocuments(this.acitveCondition())
-    // ]);
-
     const data = await this.productModel.find(this.acitveCondition()).sort({ createdAt: -1 }).skip((pageNum-1)*pageSize).limit(pageSize);
     const total = await this.productModel.countDocuments(this.acitveCondition());
     return { data, total };

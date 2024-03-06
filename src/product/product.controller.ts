@@ -11,10 +11,9 @@ import {
   Query
 } from "@nestjs/common";
 import { ProductService } from "./product.service";
-import { Product } from "../schema/product.schema";
 import { CreateProductDto } from "../dto/create-product.dto";
 import { UpdateProductDto } from "../dto/update-product.dto";
-import { DataStatus, HttpStatus, ResponseMessage } from "../global/global-enum";
+import { HttpStatus, ResponseMessage } from "../global/global-enum";
 import { ApiResponse } from "../global/api-response";
 
 @Controller("api/product")
@@ -41,10 +40,14 @@ export class ProductController {
       product: CreateProductDto
   ) {
     try {
+      const { error, value } = CreateProductDto.schema.validate(product);
+      if (error) {
+        throw new HttpException(ApiResponse.error(error.details[0].message || ResponseMessage.SERVER_INTERNAL_ERROR), HttpStatus.ERROR);
+      }
       const data = await this.productService.create(product);
       return ApiResponse.success(data, ResponseMessage.CREATE_SUCCESS);
     } catch (error) {
-      throw new HttpException(ApiResponse.error(ResponseMessage.SERVER_INTERNAL_ERROR), HttpStatus.ERROR);
+      throw new HttpException(ApiResponse.error(error?.message || ResponseMessage.SERVER_INTERNAL_ERROR), HttpStatus.ERROR);
     }
   }
 
@@ -69,10 +72,14 @@ export class ProductController {
       product: UpdateProductDto
   ) {
     try {
+      const { error, value } = UpdateProductDto.schema.validate(product);
+      if (error) {
+        throw new HttpException(ApiResponse.error(error.details[0].message || ResponseMessage.SERVER_INTERNAL_ERROR), HttpStatus.ERROR);
+      }
       const data = await this.productService.updateById(id, product);
       return ApiResponse.success(data, ResponseMessage.UPDATE_SUCCESS);
     } catch (error) {
-      throw new HttpException(ApiResponse.error(ResponseMessage.SERVER_INTERNAL_ERROR), HttpStatus.ERROR);
+      throw new HttpException(ApiResponse.error(error?.message || ResponseMessage.SERVER_INTERNAL_ERROR), HttpStatus.ERROR);
     }
   }
 
